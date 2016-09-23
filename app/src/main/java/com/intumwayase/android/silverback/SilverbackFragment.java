@@ -51,10 +51,10 @@ public class SilverbackFragment extends Fragment {
         populateScreen();
     }
 
-    public class SilverbackDataTask extends AsyncTask<String, Void, String[]> {
+    public class SilverbackDataTask extends AsyncTask<Void, Void, String[]> {
 
         @Override
-        protected String[] doInBackground(String... params) {
+        protected String[] doInBackground(Void... args) {
 
             SilverbackDataRetrieveTask dataTask;
             SilverbackDataHelper silverbackData;
