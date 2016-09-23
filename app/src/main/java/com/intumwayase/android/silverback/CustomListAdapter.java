@@ -1,6 +1,7 @@
 package com.intumwayase.android.silverback;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
 
 /**
  * Created by intumwa on 9/23/16.
@@ -28,40 +31,48 @@ public class CustomListAdapter extends ArrayAdapter<String> {
         this.imageUrls = imageUrls;
     }
 
-    public View getView(int position, View view, ViewGroup parent) {
+    public View getView(int position, View view, ViewGroup container) {
 
         LayoutInflater inflater=context.getLayoutInflater();
-        View rowView=inflater.inflate(R.layout.list_item_silverback, null,true);
+        View rootView=inflater.inflate(R.layout.list_item_silverback, container, false);
 
-        TextView title = (TextView) rowView.findViewById(R.id.list_item_silverback_textview);
-        ImageView imageView = (ImageView) rowView.findViewById(R.id.list_tem_silverback_image);
+        TextView title = (TextView) rootView.findViewById(R.id.list_item_silverback_textview);
+        ImageView imageView = (ImageView) rootView.findViewById(R.id.list_tem_silverback_image);
 
         title.setText(titles[position]);
 
-
-        // App icon will be shown before loading image
-        int loader = R.drawable.ic_launcher;
-
-        // ImageLoader class instance
-        ImageLoader imgLoader = new ImageLoader(context);
-
         String imgUrl = "{\"thumbnails\":" + imageUrls[position] + "}";
         String[] thumbs = null;
+
         try {
+
             JSONObject imgJson = new JSONObject(imgUrl);
             JSONArray thumbsArray = imgJson.getJSONArray("thumbnails");
             thumbs = new String[thumbsArray.length()];
+
             for(int i = 0; i < thumbsArray.length(); i++) {
                 thumbs[i] = thumbsArray.getString(i);
             }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        // Loading image from url
-        imgLoader.DisplayImage(thumbs[0], loader, imageView);
+        Bitmap bitmap = null;
+        BitmapHelper bitmapHelper;
 
-        return rowView;
+        try {
 
-    };
+            bitmapHelper = new BitmapHelper();
+            bitmap = bitmapHelper.getBitmap(thumbs[0]);
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        imageView.setImageBitmap(bitmap);
+
+        return rootView;
+
+    }
 }
