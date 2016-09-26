@@ -24,7 +24,9 @@ import java.net.URL;
  * Created by intumwa on 9/23/16.
  */
 public class CustomListAdapter extends ArrayAdapter<String> {
+
     private final Activity context;
+    
     private String[] titles;
     private String[] imageUrls;
     private Bitmap bitmap;
@@ -73,10 +75,10 @@ public class CustomListAdapter extends ArrayAdapter<String> {
 
     }
 
-    public class BitmapTask extends AsyncTask<String, Bitmap, InputStream> {
+    public class BitmapTask extends AsyncTask<String, Bitmap, Bitmap> {
 
         @Override
-        protected InputStream doInBackground(String... params) {
+        protected Bitmap doInBackground(String... params) {
 
             String imgUrl = params[0];
 
@@ -92,31 +94,29 @@ public class CustomListAdapter extends ArrayAdapter<String> {
 
                 if (responseCode == HttpURLConnection.HTTP_OK) {
 
+
                     InputStream in = conn.getInputStream();
+
+                    bitmap = BitmapFactory.decodeStream(in);
+
+                    in.close();
 
                     Log.v("SilverBack", "Response: " + in);
 
-                    return in;
+                    return bitmap;
 
-                }
-                else {
-                    Log.v("SilverBack", "Response code: " + conn.getResponseCode());
+                } else {
                     return null;
                 }
             }
             catch(Exception e){
-                Log.v("SilverBack", "Response code: " + e.getMessage());
                 return null;
             }
 
         }
 
         @Override
-        protected void onPostExecute(InputStream result) {
-
-            Log.v("SilverBack", "Result: " + result);
-
-            bitmap = BitmapFactory.decodeStream(result);
+        protected void onPostExecute(Bitmap bitmap) {
 
             Log.v("SilverBack", "Bitmap: " + bitmap);
 
