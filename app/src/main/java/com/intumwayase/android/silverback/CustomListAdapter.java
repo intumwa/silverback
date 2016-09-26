@@ -26,11 +26,10 @@ import java.net.URL;
 public class CustomListAdapter extends ArrayAdapter<String> {
 
     private final Activity context;
-    
+
     private String[] titles;
     private String[] imageUrls;
     private Bitmap bitmap;
-    private ImageView imageView;
 
     public CustomListAdapter(Activity context, String[] titles, String[] imageUrls) {
         super(context, R.layout.list_item_silverback, titles);
@@ -46,7 +45,7 @@ public class CustomListAdapter extends ArrayAdapter<String> {
         View rootView=inflater.inflate(R.layout.list_item_silverback, container, false);
 
         TextView title = (TextView) rootView.findViewById(R.id.list_item_silverback_textview);
-        imageView = (ImageView) rootView.findViewById(R.id.list_tem_silverback_image);
+        ImageView imageView = (ImageView) rootView.findViewById(R.id.list_tem_silverback_image);
 
         title.setText(titles[position]);
 
@@ -68,7 +67,7 @@ public class CustomListAdapter extends ArrayAdapter<String> {
         }
 
 
-        BitmapTask bitmapTask = new BitmapTask();
+        BitmapTask bitmapTask = new BitmapTask(imageView);
         bitmapTask.execute(thumbs[0]);
 
         return rootView;
@@ -76,6 +75,12 @@ public class CustomListAdapter extends ArrayAdapter<String> {
     }
 
     public class BitmapTask extends AsyncTask<String, Bitmap, Bitmap> {
+
+        private ImageView imageView;
+
+        BitmapTask(ImageView imgView) {
+            imageView = imgView;
+        }
 
         @Override
         protected Bitmap doInBackground(String... params) {
