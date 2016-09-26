@@ -106,8 +106,6 @@ public class CustomListAdapter extends ArrayAdapter<String> {
 
                     in.close();
 
-                    Log.v("SilverBack", "Response: " + in);
-
                     return bitmap;
 
                 } else {
@@ -122,8 +120,6 @@ public class CustomListAdapter extends ArrayAdapter<String> {
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-
-            Log.v("SilverBack", "Bitmap: " + bitmap);
 
             imageView.setImageBitmap(bitmap);
 
